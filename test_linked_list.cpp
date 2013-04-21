@@ -22,39 +22,65 @@ int main(int argc, char** argv) {
     // Print initial list
     printHeader();
     cout << endl << "Initial List..." << endl;
+
     linkedList.print();
 
     // Test insertions
+    printHeader();
+    cout << endl << "Testing Insertions..." << endl;
+
     int zero = 0;
     int one = 1;
     int two = 2;
     int three = 3;
 
+    cout << endl << "Expected: 3";
+    cout << endl << "Actual:   ";
     IntNode* threeIntNode = linkedList.insertBeginning(three);
-    IntNode* zeroIntNode = linkedList.insertBeginning(zero);
-    IntNode* oneIntNode = linkedList.insertAfter(zeroIntNode, one);
-    IntNode* twoIntNode = linkedList.insertAfter(oneIntNode, two);
+    linkedList.print();
 
-    printHeader();
-    cout << endl << "Testing Insertions..." << endl;
-    cout << endl << "Output Should Match..." << endl;
-    cout << "0 -> 1 -> 2 -> 3" << endl;
-    cout << endl << "Test Output..." << endl;
+    cout << endl << "Expected: 0 -> 3";
+    cout << endl << "Actual:   ";
+    IntNode* zeroIntNode = linkedList.insertBeginning(zero);
+    linkedList.print();
+
+    cout << endl << "Expected: 0 -> 1 -> 3";
+    cout << endl << "Actual:   ";
+    IntNode* oneIntNode = linkedList.insertAfter(zeroIntNode, one);
+    linkedList.print();
+
+    cout << endl << "Expected: 0 -> 1 -> 2 -> 3";
+    cout << endl << "Actual:   ";
+    IntNode* twoIntNode = linkedList.insertAfter(oneIntNode, two);
     linkedList.print();
 
     // Test deletions
     printHeader();
     cout << endl << "Testing Deletions..." << endl;
-    cout << endl << "Output Should Match..." << endl;
-    cout << "0 -> 1 -> 3" << endl;
+
+    cout << endl << "Expected: 0 -> 1 -> 3";
+    cout << endl << "Actual:   ";
     linkedList.removeAfter(oneIntNode);
-    cout << endl << "Test Output..." << endl;
     linkedList.print();
 
-    cout << endl << "Output Should Match..." << endl;
-    cout << "0 -> 1" << endl;
+    cout << endl << "Expected: 0 -> 1";
+    cout << endl << "Actual:   ";
     linkedList.removeAfter(oneIntNode);
-    cout << endl << "Test Output..." << endl;
+    linkedList.print();
+
+    cout << endl << "Expected: 1";
+    cout << endl << "Actual:   ";
+    linkedList.removeBeginning();
+    linkedList.print();
+
+    cout << endl << "Expected: NULL";
+    cout << endl << "Actual:   ";
+    linkedList.removeAfter(0);
+    linkedList.print();
+
+    cout << endl << "Expected: NULL";
+    cout << endl << "Actual:   ";
+    linkedList.removeBeginning();
     linkedList.print();
 
     printHeader();

@@ -51,24 +51,24 @@ public:
 
     void removeAfter(LinkedListNode<DataType>* pAfterNode) {
         if (pAfterNode == 0) {
-            return;
-        }
-
-        LinkedListNode<DataType>* pNextNode = pAfterNode->next();
-
-        if (pNextNode == 0) {
-            return;
-        }
-
-        LinkedListNode<DataType>* pNextNextNode = pNextNode->next();
-
-        if (pNextNextNode != 0) {
-            pAfterNode->setNext(pNextNextNode);
+            // If pAfterNode is 0, then delete the first item in the list
+            if (mpFirstNode != 0) {
+                LinkedListNode<DataType>* pDeleteNode = mpFirstNode;
+                mpFirstNode = mpFirstNode->next();
+                delete pDeleteNode;
+            }
         } else {
-            pAfterNode->setNext(0);
-        }
+            LinkedListNode<DataType>* pNextNode = pAfterNode->next();
 
-        delete pNextNode;
+            if (pNextNode != 0) {
+                pAfterNode->setNext(pNextNode->next());
+                delete pNextNode;
+            }
+        }
+    }
+
+    void removeBeginning() {
+        this->removeAfter(0);
     }
 
     void print() {
