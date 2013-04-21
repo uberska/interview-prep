@@ -19,6 +19,11 @@ int main(int argc, char** argv) {
 
     IntList linkedList;
 
+    // Print initial list
+    printHeader();
+    cout << endl << "Initial List..." << endl;
+    linkedList.print();
+
     // Test insertions
     int zero = 0;
     int one = 1;
@@ -31,6 +36,7 @@ int main(int argc, char** argv) {
     IntNode* twoIntNode = linkedList.insertAfter(oneIntNode, two);
 
     printHeader();
+    cout << endl << "Testing Insertions..." << endl;
     cout << endl << "Output Should Match..." << endl;
     cout << "0 -> 1 -> 2 -> 3" << endl;
     cout << endl << "Test Output..." << endl;
@@ -38,19 +44,20 @@ int main(int argc, char** argv) {
 
     // Test deletions
     printHeader();
+    cout << endl << "Testing Deletions..." << endl;
     cout << endl << "Output Should Match..." << endl;
     cout << "0 -> 1 -> 3" << endl;
     linkedList.removeAfter(oneIntNode);
     cout << endl << "Test Output..." << endl;
     linkedList.print();
 
-    printHeader();
     cout << endl << "Output Should Match..." << endl;
     cout << "0 -> 1" << endl;
     linkedList.removeAfter(oneIntNode);
     cout << endl << "Test Output..." << endl;
     linkedList.print();
 
+    printHeader();
     cout << endl << "Done With LinkedList Test." << endl;
 }
 
