@@ -29,29 +29,24 @@ int main(int argc, char** argv) {
     printHeader();
     cout << endl << "Testing Insertions..." << endl;
 
-    int zero = 0;
-    int one = 1;
-    int two = 2;
-    int three = 3;
-
     cout << endl << "Expected: 3";
     cout << endl << "Actual:   ";
-    IntNode* threeIntNode = linkedList.insertBeginning(three);
+    IntNode* threeIntNode = linkedList.insertBeginning(3);
     linkedList.print();
 
     cout << endl << "Expected: 0 -> 3";
     cout << endl << "Actual:   ";
-    IntNode* zeroIntNode = linkedList.insertBeginning(zero);
+    IntNode* zeroIntNode = linkedList.insertBeginning(0);
     linkedList.print();
 
     cout << endl << "Expected: 0 -> 1 -> 3";
     cout << endl << "Actual:   ";
-    IntNode* oneIntNode = linkedList.insertAfter(zeroIntNode, one);
+    IntNode* oneIntNode = linkedList.insertAfter(zeroIntNode, 1);
     linkedList.print();
 
     cout << endl << "Expected: 0 -> 1 -> 2 -> 3";
     cout << endl << "Actual:   ";
-    IntNode* twoIntNode = linkedList.insertAfter(oneIntNode, two);
+    IntNode* twoIntNode = linkedList.insertAfter(oneIntNode, 2);
     linkedList.print();
 
     // Test deletions

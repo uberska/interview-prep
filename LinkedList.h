@@ -24,7 +24,7 @@ public:
         { return mpFirstNode; }
 
     LinkedListNode<DataType>* insertAfter(LinkedListNode<DataType>* pAfterNode,
-        DataType& data) {
+        const DataType& data) {
 
         if (pAfterNode == 0) {
             // If we're inserting after NULL, interpret that as "insert at the
@@ -45,7 +45,7 @@ public:
         }
     }
 
-    LinkedListNode<DataType>* insertBeginning(DataType& data) {
+    LinkedListNode<DataType>* insertBeginning(const DataType& data) {
         this->insertAfter(0, data);
     }
 

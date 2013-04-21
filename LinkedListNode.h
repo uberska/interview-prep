@@ -1,7 +1,7 @@
 template <class DataType>
 class LinkedListNode {
 public:
-    LinkedListNode(DataType& data, LinkedListNode<DataType>* pNext = 0) :
+    LinkedListNode(const DataType& data, LinkedListNode<DataType>* pNext = 0) :
         mData(data),
         mpNext(pNext) {}
 
