@@ -25,25 +25,28 @@ public:
 
     LinkedListNode<DataType>* insertAfter(LinkedListNode<DataType>* pAfterNode,
         DataType& data) {
+
         if (pAfterNode == 0) {
-            return 0;
+            // If we're inserting after NULL, interpret that as "insert at the
+            // begninning of the list"
+            LinkedListNode<DataType>* pInsertNode =
+                new LinkedListNode<DataType>(data, mpFirstNode);
+
+            mpFirstNode = pInsertNode;
+
+            return pInsertNode;
+        } else {
+            LinkedListNode<DataType>* pInsertNode =
+                new LinkedListNode<DataType>(data, pAfterNode->next());
+
+            pAfterNode->setNext(pInsertNode);
+
+            return pInsertNode;
         }
-
-        LinkedListNode<DataType>* pInsertNode =
-            new LinkedListNode<DataType>(data, pAfterNode->next());
-
-        pAfterNode->setNext(pInsertNode);
-
-        return pInsertNode;
     }
 
     LinkedListNode<DataType>* insertBeginning(DataType& data) {
-        LinkedListNode<DataType>* pInsertNode =
-            new LinkedListNode<DataType>(data, mpFirstNode);
-
-        mpFirstNode = pInsertNode;
-
-        return pInsertNode;
+        this->insertAfter(0, data);
     }
 
     void removeAfter(LinkedListNode<DataType>* pAfterNode) {
