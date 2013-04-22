@@ -60,6 +60,30 @@ int main(int argc, char** argv) {
     cout << endl << "Actual:   ";
     tree.print(IntTree::POST_ORDER);
 
+    // Test deletions
+    printHeader();
+    cout << endl << "Testing Deletions (Traversals PRE ORDER)..." << endl;
+
+    cout << endl << "Expected: 80, 30, 10, 0, 40, 100";
+    cout << endl << "Actual:   ";
+    tree.remove(50);
+    tree.print(IntTree::PRE_ORDER);
+
+    cout << endl << "Expected: 80, 30, 10, 0, 40";
+    cout << endl << "Actual:   ";
+    tree.remove(100);
+    tree.print(IntTree::PRE_ORDER);
+
+    cout << endl << "Expected: 80, 30, 0, 40";
+    cout << endl << "Actual:   ";
+    tree.remove(10);
+    tree.print(IntTree::PRE_ORDER);
+
+    cout << endl << "Expected: 80, 30, 0, 40";
+    cout << endl << "Actual:   ";
+    tree.remove(3);
+    tree.print(IntTree::PRE_ORDER);
+
     printHeader();
     cout << endl << "Done With BinaryTree Test." << endl;
 }
