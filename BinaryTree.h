@@ -31,7 +31,35 @@ public:
     }
 
     void remove(const DataType& data) {
-        cout << "BinaryTree::remove Not Yet Implemented" << endl;
+        // Handle the root case
+        if (mpRootNode && data == mpRootNode->getData()) {
+            if (!mpRootNode->getLeft() && !mpRootNode->getRight()) {
+                // The root node doesn't have any children. Just delete it.
+                delete mpRootNode;
+                mpRootNode = 0;
+            } else if (mpRootNode->getLeft() && mpRootNode->getRight()) {
+                // The root node has two children.
+                removeNodeWithTwoChildren(*mpRootNode);
+            } else {
+                // The root node has one child.
+
+                BinaryTreeNode<DataType>* pDelete = mpRootNode;
+
+                // Get our new root node.
+                if (mpRootNode->getLeft()) {
+                    // The root node has only one child (the left node).
+                    mpRootNode = mpRootNode->getLeft();
+                } else {
+                    // The root node has only one child (the right node).
+                    mpRootNode = mpRootNode->getRight();
+                }
+
+                // Delete the old root node.
+                delete pDelete;
+            }
+        } else {
+            this->removeChild(data, mpRootNode);
+        }
     }
 
     void print(TraversalType traversalType = PRE_ORDER) {
@@ -50,20 +78,119 @@ private:
     typedef void (BinaryTree::*ProcessTreeNodeCallback)(
         BinaryTreeNode<DataType>* pNode, const bool&, bool&);
 
-    void insert(const DataType& data, BinaryTreeNode<DataType>& afterNode) {
-        if (data < afterNode.getData()) {
-            if (afterNode.getLeft() == 0) {
-                afterNode.setLeft(new BinaryTreeNode<DataType>(data));
+    void insert(const DataType& data, BinaryTreeNode<DataType>& node) {
+        if (data == node.getData()) {
+            // We don't allow duplicates.
+        } else if (data < node.getData()) {
+            if (node.getLeft() == 0) {
+                node.setLeft(new BinaryTreeNode<DataType>(data));
             } else {
-                this->insert(data, *afterNode.getLeft());
+                this->insert(data, *node.getLeft());
             }
         } else {
-            if (afterNode.getRight() == 0) {
-                afterNode.setRight(new BinaryTreeNode<DataType>(data));
+            if (node.getRight() == 0) {
+                node.setRight(new BinaryTreeNode<DataType>(data));
             } else {
-                this->insert(data, *afterNode.getRight());
+                this->insert(data, *node.getRight());
             }
         }
+    }
+
+    // Check the children of pNode to see if they match data. If so, delete
+    // them. We operate at this level because there are instances where we need
+    // to update the parent of the deleted node, but nodes don't have back
+    // pointers to their parents.
+    void removeChild(const DataType& data,
+        BinaryTreeNode<DataType>* pNode) {
+
+        if (!pNode) {
+            return;
+        }
+
+        if (pNode->getLeft() && data == pNode->getLeft()->getData()) {
+            // Our left child is the node to delete. Delete it.
+
+            BinaryTreeNode<DataType>* pDelete = pNode->getLeft();
+
+            if (!pDelete->getLeft() && !pDelete->getRight()) {
+                // It doesn't have any children. Delete the node and update
+                // our left pointer.
+                pNode->setLeft(0);
+                delete pDelete;
+            } else if (pDelete->getLeft() && pDelete->getRight()) {
+                // The node has two children.
+                removeNodeWithTwoChildren(*pDelete);
+            } else {
+                // The node must only have one child.
+                removeNodeWithOneChild(pDelete, pNode,
+                    true /*fDeleteNodeLeftOfParent*/);
+            }
+        } else if (pNode->getRight() && data == pNode->getRight()->getData()) {
+            // Our right child is the node to delete. Delete it.
+
+            BinaryTreeNode<DataType>* pDelete = pNode->getRight();
+
+            if (!pDelete->getLeft() && !pDelete->getRight()) {
+                // It doesn't have any children. Delete the node and update
+                // our left pointer.
+                pNode->setRight(0);
+                delete pDelete;
+            } else if (pDelete->getLeft() && pDelete->getRight()) {
+                // The node has two children.
+                removeNodeWithTwoChildren(*pDelete);
+            } else {
+                // The node must only have one child.
+                removeNodeWithOneChild(pDelete, pNode,
+                    false /*fDeleteNodeLeftOfParent*/);
+            }
+        } else {
+            // It's neither of the children of this node. Continue down the tree
+            if (data < pNode->getData()) {
+                this->removeChild(data, pNode->getLeft());
+            } else {
+                this->removeChild(data, pNode->getRight());
+            }
+        }
+    }
+
+    void removeNodeWithOneChild(BinaryTreeNode<DataType>* pDelete,
+        BinaryTreeNode<DataType>* pParent, bool fDeleteNodeLeftOfParent) {
+
+        // Update the parent of the delete node to point at the single child
+        // of the deleted node.
+        if (fDeleteNodeLeftOfParent) {
+            if (pDelete->getLeft()) {
+                pParent->setLeft(pDelete->getLeft());
+            } else {
+                pParent->setLeft(pDelete->getRight());
+            }
+        } else {
+            if (pDelete->getLeft()) {
+                pParent->setRight(pDelete->getLeft());
+            } else {
+                pParent->setRight(pDelete->getRight());
+            }
+        }
+
+        // Delete the node
+        delete pDelete;
+    }
+
+    void removeNodeWithTwoChildren(BinaryTreeNode<DataType>& pNode) {
+        BinaryTreeNode<DataType>* pParent = &pNode;
+        BinaryTreeNode<DataType>* pInOrderPredecessor = pNode.getLeft();
+
+        while (pInOrderPredecessor->getRight()) {
+            pParent = pInOrderPredecessor;
+            pInOrderPredecessor = pInOrderPredecessor->getRight();
+        }
+
+        // Copy the in-order predecessor's data into our node
+        pNode.setData(pInOrderPredecessor->getData());
+
+        // Delete the in-order predecessor (which we know has no children)
+        pParent->setRight(0);
+        delete pInOrderPredecessor;
     }
 
     void traverse(TraversalType traversalType,

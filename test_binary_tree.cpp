@@ -35,6 +35,8 @@ int main(int argc, char** argv) {
     tree.insert(30);
     cout << endl << "Inserting 80";
     tree.insert(80);
+    cout << endl << "Inserting 80";
+    tree.insert(80);
     cout << endl << "Inserting 40";
     tree.insert(40);
     cout << endl << "Inserting 10";
@@ -62,27 +64,52 @@ int main(int argc, char** argv) {
 
     // Test deletions
     printHeader();
-    cout << endl << "Testing Deletions (Traversals PRE ORDER)..." << endl;
+    cout << endl << "Testing Deletions (Traversals IN ORDER)..." << endl;
 
-    cout << endl << "Expected: 80, 30, 10, 0, 40, 100";
+    cout << endl << "Expected: 0, 10, 30, 40, 80, 100";
     cout << endl << "Actual:   ";
     tree.remove(50);
-    tree.print(IntTree::PRE_ORDER);
+    tree.print(IntTree::IN_ORDER);
 
-    cout << endl << "Expected: 80, 30, 10, 0, 40";
+    cout << endl << "Expected: 0, 10, 30, 40, 80";
     cout << endl << "Actual:   ";
     tree.remove(100);
-    tree.print(IntTree::PRE_ORDER);
+    tree.print(IntTree::IN_ORDER);
 
-    cout << endl << "Expected: 80, 30, 0, 40";
+    cout << endl << "Expected: 0, 30, 40, 80";
     cout << endl << "Actual:   ";
     tree.remove(10);
-    tree.print(IntTree::PRE_ORDER);
+    tree.print(IntTree::IN_ORDER);
 
-    cout << endl << "Expected: 80, 30, 0, 40";
+    cout << endl << "Expected: 0, 30, 40, 80";
     cout << endl << "Actual:   ";
     tree.remove(3);
-    tree.print(IntTree::PRE_ORDER);
+    tree.print(IntTree::IN_ORDER);
+
+    cout << endl << "Expected: 0, 40, 80";
+    cout << endl << "Actual:   ";
+    tree.remove(30);
+    tree.print(IntTree::IN_ORDER);
+
+    cout << endl << "Expected: 0, 40";
+    cout << endl << "Actual:   ";
+    tree.remove(80);
+    tree.print(IntTree::IN_ORDER);
+
+    cout << endl << "Expected: 40";
+    cout << endl << "Actual:   ";
+    tree.remove(0);
+    tree.print(IntTree::IN_ORDER);
+
+    cout << endl << "Expected: NULL Root";
+    cout << endl << "Actual:   ";
+    tree.remove(40);
+    tree.print(IntTree::IN_ORDER);
+
+    cout << endl << "Expected: NULL Root";
+    cout << endl << "Actual:   ";
+    tree.remove(3);
+    tree.print(IntTree::IN_ORDER);
 
     printHeader();
     cout << endl << "Done With BinaryTree Test." << endl;

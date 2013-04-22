@@ -9,6 +9,8 @@ public:
 
     const DataType& getData() const { return mData; }
 
+    void setData(const DataType& data) { mData = data; }
+
     BinaryTreeNode* getLeft() { return mpLeft; }
     const BinaryTreeNode* const getLeft() const { return mpLeft; }
 
