@@ -108,6 +108,21 @@ unsigned int myStrLen(char* aString) {
 }
 
 
+void myStrCpy(char* destString, const char* srcString) {
+    if (!destString || !srcString) {
+        return;
+    }
+
+    while (*srcString != '\0') {
+        *destString = *srcString;
+        srcString++;
+        destString++;
+    }
+
+    *destString = '\0';
+}
+
+
 int main(int argc, char** argv) {
     //
     // Let the user know we're starting.
@@ -165,6 +180,26 @@ int main(int argc, char** argv) {
     cout << "String  : NULL" << endl;
     cout << "Expected: 0" << endl;
     cout << "Actual  : " << myStrLen(lenString3) << endl;
+
+    //
+    // Implement strcpy
+    //
+    printHeader();
+    cout << endl << "Implement strcpy" << endl;
+
+    cout << endl;
+    char* srcString1 = "This is a test string.";
+    cout << "Source String: " << srcString1 << endl;
+    char destString1[myStrLen(srcString1) + 1];
+    myStrCpy(destString1, srcString1);
+    cout << "Copied String: " << destString1 << endl;
+
+    cout << endl;
+    char* srcString2 = "";
+    cout << "Source String: <Empty String>" << endl;
+    char destString2[myStrLen(srcString2) + 1];
+    myStrCpy(destString2, srcString2);
+    cout << "Copied String: " << destString2 << endl;
 
     //
     // Merge two sorted int arrays into one sorted int array
