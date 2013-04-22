@@ -11,8 +11,9 @@ public:
     BinaryTree() : mpRootNode(0) {}
 
     ~BinaryTree() {
+        bool fVisitedANode = false;
         this->traverse(POST_ORDER, &BinaryTree::deleteTreeNode, mpRootNode,
-            true /*fRootOfTree*/, false /*fVisitedANode*/);
+            true /*fRootOfTree*/, fVisitedANode);
     }
 
     enum TraversalType {
@@ -29,10 +30,15 @@ public:
         }
     }
 
+    void remove(const DataType& data) {
+        cout << "BinaryTree::remove Not Yet Implemented" << endl;
+    }
+
     void print(TraversalType traversalType = PRE_ORDER) {
         if (mpRootNode) {
+            bool fVisitedANode = false;
             this->traverse(traversalType, &BinaryTree::printTreeNode,
-                mpRootNode, true /*fRootOfTree*/, false /*fVisitedANode*/);
+                mpRootNode, true /*fRootOfTree*/, fVisitedANode);
         } else {
             cout << "NULL Root";
         }
@@ -42,7 +48,7 @@ public:
 
 private:
     typedef void (BinaryTree::*ProcessTreeNodeCallback)(
-        BinaryTreeNode<DataType>* pNode, bool, bool);
+        BinaryTreeNode<DataType>* pNode, const bool&, bool&);
 
     void insert(const DataType& data, BinaryTreeNode<DataType>& afterNode) {
         if (data < afterNode.getData()) {
@@ -60,76 +66,74 @@ private:
         }
     }
 
-    bool traverse(TraversalType traversalType,
+    void traverse(TraversalType traversalType,
         ProcessTreeNodeCallback processTreeNode,
         BinaryTreeNode<DataType>* pRootNode,
-        bool fRootOfTree,
-        bool fVisitedANode) {
+        const bool& fRootOfTree,
+        bool& fVisitedANode) {
 
         if (pRootNode) {
             if (traversalType == PRE_ORDER) {
                 // Root
                 (this->*processTreeNode)(pRootNode, fRootOfTree, fVisitedANode);
-                fVisitedANode = true;
 
                 // Left
-                fVisitedANode |= this->traverse(traversalType, processTreeNode,
+                this->traverse(traversalType, processTreeNode,
                     pRootNode->getLeft(), false /*fRootOfTree*/,
                     fVisitedANode);
 
                 // Right
-                fVisitedANode |= this->traverse(traversalType, processTreeNode,
+                this->traverse(traversalType, processTreeNode,
                     pRootNode->getRight(), false /*fRootOfTree*/,
                     fVisitedANode);
             } else if (traversalType == IN_ORDER) {
                 // Left
-                fVisitedANode |= this->traverse(traversalType, processTreeNode,
+                this->traverse(traversalType, processTreeNode,
                     pRootNode->getLeft(), false /*fRootOfTree*/,
                     fVisitedANode);
 
                 // Root
                 (this->*processTreeNode)(pRootNode, fRootOfTree, fVisitedANode);
-                fVisitedANode = true;
 
                 // Right
-                fVisitedANode |= this->traverse(traversalType, processTreeNode,
+                this->traverse(traversalType, processTreeNode,
                     pRootNode->getRight(), false /*fRootOfTree*/,
                     fVisitedANode);
             } else if (traversalType == POST_ORDER) {
                 // Left
-                fVisitedANode |= this->traverse(traversalType, processTreeNode,
+                this->traverse(traversalType, processTreeNode,
                     pRootNode->getLeft(), false /*fRootOfTree*/,
                     fVisitedANode);
 
                 // right
-                fVisitedANode |= this->traverse(traversalType, processTreeNode,
+                this->traverse(traversalType, processTreeNode,
                     pRootNode->getRight(), false /*fRootOfTree*/,
                     fVisitedANode);
 
                 // Root
                 (this->*processTreeNode)(pRootNode, fRootOfTree, fVisitedANode);
-                fVisitedANode = true;
             }
         }
-
-        return fVisitedANode;
     }
 
     void printTreeNode(BinaryTreeNode<DataType>* pNode,
-        bool fRootOfTree,
-        bool fVisitedANode) {
+        const bool& fRootOfTree,
+        bool& fVisitedANode) {
 
         if (pNode) {
             if (fVisitedANode) {
                 cout << ", ";
             }
             cout << pNode->getData();
+
+            fVisitedANode = true;
         }
     }
 
     void deleteTreeNode(BinaryTreeNode<DataType>* pNode,
-        bool /*fRootOfTree*/,
-        bool /*fVisitedNode*/) {
+        const bool& /*fRootOfTree*/,
+        bool& /*fVisitedNode*/) {
+
         delete pNode;
     }
 
