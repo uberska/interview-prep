@@ -94,6 +94,20 @@ void mergeSortedIntArrays(int intArray1[], int array1Count,
 }
 
 
+unsigned int myStrLen(char* aString) {
+    unsigned int length = 0;
+
+    if (aString) {
+        while (*aString != '\0') {
+            length++;
+            aString++;
+        }
+    }
+
+    return length;
+}
+
+
 int main(int argc, char** argv) {
     //
     // Let the user know we're starting.
@@ -127,6 +141,30 @@ int main(int argc, char** argv) {
     reverseString(oddString);
 
     cout << "Reversed: " << oddString << endl;
+
+    //
+    // Calculate the length of a null terminated char*
+    //
+    printHeader();
+    cout << endl << "Implement strlen" << endl;
+
+    char* lenString1 = "This is a test string.";
+    cout << endl;
+    cout << "String  : " << lenString1 << endl;
+    cout << "Expected: 22" << endl;
+    cout << "Actual  : " << myStrLen(lenString1) << endl;
+
+    char* lenString2 = "";
+    cout << endl;
+    cout << "String  : <Empty String>" << endl;
+    cout << "Expected: 0" << endl;
+    cout << "Actual  : " << myStrLen(lenString2) << endl;
+
+    char* lenString3 = 0;
+    cout << endl;
+    cout << "String  : NULL" << endl;
+    cout << "Expected: 0" << endl;
+    cout << "Actual  : " << myStrLen(lenString3) << endl;
 
     //
     // Merge two sorted int arrays into one sorted int array
