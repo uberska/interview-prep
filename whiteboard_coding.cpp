@@ -9,6 +9,31 @@ void printHeader() {
 }
 
 
+// Swap values without a temporary variable if the operands support xor.
+// This may not be faster than letting the compiler optimze out a temporary
+// variable, but it's still something often used in interview questions.
+template <typename DataType>
+void xorSwap(DataType* one, DataType* two) {
+    if (one != two) {
+        *one ^= *two;
+        *two ^= *one;
+        *one ^= *two;
+    }
+}
+
+// Swap values with a temporary variable
+template <typename DataType>
+void swap(DataType* one, DataType* two) {
+    if (!one || !two) {
+        return;
+    }
+
+    DataType temp(*one);
+    *one = *two;
+    *two = temp;
+}
+
+
 void reverseString(char* aString) {
     // Find the last character
     char* endChar = aString;
@@ -19,9 +44,8 @@ void reverseString(char* aString) {
     // Reverse the string in place
     //while (endChar != aString && endChar != aString - 1) {
     while (endChar > aString) {
-        char temp = *aString;
-        *aString = *endChar;
-        *endChar = temp;
+        //swap<char>(aString, endChar);
+        xorSwap<char>(aString, endChar);
         aString++;
         endChar--;
     }
