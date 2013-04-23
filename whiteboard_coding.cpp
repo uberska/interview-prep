@@ -1,4 +1,6 @@
 #include <iostream>
+#include <set>
+#include <string>
 
 
 using namespace std;
@@ -123,6 +125,22 @@ void myStrCpy(char* destString, const char* srcString) {
 }
 
 
+string addSpacesToStr(const set<string>& words, const string& withoutSpaces) {
+    for (int charIndex = 0; charIndex <= withoutSpaces.length(); charIndex++) {
+        string wordOne = withoutSpaces.substr(0, charIndex);
+        string wordTwo = withoutSpaces.substr(charIndex,
+            withoutSpaces.length() - charIndex);
+
+        if (words.find(wordOne) != words.end() &&
+            words.find(wordTwo) != words.end()) {
+            return wordOne + " " + wordTwo;
+        }
+    }
+
+    return withoutSpaces;
+}
+
+
 int main(int argc, char** argv) {
     //
     // Let the user know we're starting.
@@ -229,6 +247,27 @@ int main(int argc, char** argv) {
     printArray(outputArray, array1Count + array2Count);
 
     cout << endl;
+
+    //
+    // Split a string of words without spaces into a string of words with spaces
+    //
+    printHeader();
+    cout << endl << "Adding Spaces To String Of Words" << endl;
+
+    set<string> wordSet;
+    wordSet.insert("pea");
+    wordSet.insert("nut");
+    wordSet.insert("peanut");
+    wordSet.insert("but");
+    wordSet.insert("butter");
+    wordSet.insert("awesome");
+
+    string withoutSpacesStr("peanutbutter");
+
+    cout << endl;
+    cout << "Words Without Spaces: " << withoutSpacesStr << endl;
+    string withSpacesStr = addSpacesToStr(wordSet, withoutSpacesStr);
+    cout << "Words With Spaces   : " << withSpacesStr << endl;
 
     //
     // Let the user know we're done.
