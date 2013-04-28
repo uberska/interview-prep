@@ -1,3 +1,5 @@
+#include <cstdlib>
+#include <ctime>
 #include <iostream>
 #include "AVLTree.h"
 
@@ -25,6 +27,8 @@ const char* const getYesNo(bool value) {
 
 int main(int argc, char** argv) {
     cout << endl << "Beginning AVLTree Test." << endl;
+
+    srand(time(NULL));
 
     //
     // Test insertions
@@ -175,9 +179,11 @@ int main(int argc, char** argv) {
 
     IntTree bigTree;
 
+    int numNodesAndRange = 1000;
+
     bool alwaysBalanced = true;
-    for (int index = 0; index < 1000; index++) {
-        bigTree.insert(rand() % 1000);
+    for (int index = 0; index < numNodesAndRange; index++) {
+        bigTree.insert(rand() % numNodesAndRange);
         alwaysBalanced = alwaysBalanced && bigTree.isBalanced();
     }
 
@@ -200,8 +206,8 @@ int main(int argc, char** argv) {
     cout << endl << "Testing Large Tree Deletions..." << endl;
 
     alwaysBalanced = true;
-    for (int anInt = 0; anInt < 1000; anInt++) {
-        bigTree.remove(anInt);
+    while (bigTree.getRoot() != NULL) {
+        bigTree.remove(rand() % numNodesAndRange);
         alwaysBalanced = alwaysBalanced && bigTree.isBalanced();
     }
 
@@ -210,11 +216,6 @@ int main(int argc, char** argv) {
     } else {
         cout << endl << "Tree went out of balance after a delete." << endl;
     }
-
-    cout << endl << "Tree Contents...";
-    cout << endl << "Expected: NULL Root";
-    cout << endl << "Actual:   ";
-    bigTree.print();
 
     //
     // Done
