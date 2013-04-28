@@ -93,7 +93,7 @@ int main(int argc, char** argv) {
 
     cout << endl << "Tree Height:";
     cout << endl << "Expected: 4";
-    cout << endl << "Actual: " << tree.height(tree.getRoot()) << endl;
+    cout << endl << "Actual: " << tree.computeHeight(tree.getRoot()) << endl;
 
     //
     // Testing deltions
@@ -172,7 +172,8 @@ int main(int argc, char** argv) {
     cout << endl << "Tree Balanced? - " << getYesNo(tree.isBalanced()) << endl;
 
     //
-    // Create tree with up to 1000 nodes to really test insertion and balancing
+    // Create tree with up to numNodesAndRange nodes to really test insertion
+    // and balancing
     //
     printHeader();
     cout << endl << "Testing Large Tree Insertions..." << endl;
@@ -197,7 +198,7 @@ int main(int argc, char** argv) {
     }
 
     cout << endl << "Tree Height: ";
-    cout << bigTree.height(bigTree.getRoot()) << endl;
+    cout << bigTree.computeHeight(bigTree.getRoot()) << endl;
 
     //
     // Delete all the nodes and ensure the tree is balanced the whole time

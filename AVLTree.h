@@ -12,12 +12,14 @@ struct AVLTreeNode {
     DataType data;
     AVLTreeNode<DataType>* pLeft;
     AVLTreeNode<DataType>* pRight;
+    unsigned int height;
 
     AVLTreeNode(const DataType& incomingData, AVLTreeNode* pIncomingLeft = 0,
         AVLTreeNode* pIncomingRight = 0) :
         data(incomingData),
         pLeft(pIncomingLeft),
-        pRight(pIncomingRight) {}
+        pRight(pIncomingRight),
+        height(1) {}
 };
 
 
@@ -66,20 +68,13 @@ public:
 
     const Node* const getRoot() const { return mpRootNode; }
 
-    int balanceFactor(const Node* const pNode) const {
-        if (pNode == NULL) {
-            return 0;
-        }
-        return height(pNode->pLeft) - height(pNode->pRight);
-    }
-
-    int height(const Node* const pNode) const {
+    int computeHeight(const Node* const pNode) const {
         if (pNode == NULL) {
             return 0;
         }
 
-        return max(height(pNode->pLeft),
-            height(pNode->pRight)) + 1;
+        return max(computeHeight(pNode->pLeft),
+            computeHeight(pNode->pRight)) + 1;
     }
 
     bool isBalanced() const {
@@ -92,12 +87,30 @@ private:
     typedef void (AVLTree::*ProcessTreeNodeCallback)(
         Node* pNode, const bool&, bool&);
 
+    int balanceFactor(const Node* const pNode) const {
+        if (pNode == NULL) {
+            return 0;
+        }
+        return height(pNode->pLeft) - height(pNode->pRight);
+    }
+
+    int height(const Node* const pNode) const {
+        return pNode == NULL ? 0 : pNode->height;
+    }
+
+    int computeBalanceFactor(const Node* const pNode) const {
+        if (pNode == NULL) {
+            return 0;
+        }
+        return computeHeight(pNode->pLeft) - computeHeight(pNode->pRight);
+    }
+
     bool isBalanced(const Node* const pNode) const {
         if (pNode == NULL) {
             return true;
         }
 
-        int nodeBalanceFactor = balanceFactor(pNode);
+        int nodeBalanceFactor = computeBalanceFactor(pNode);
         if (nodeBalanceFactor < -1 || nodeBalanceFactor > 1) {
             return false;
         }
@@ -127,17 +140,43 @@ private:
         rebalanceNode(pNode, false /*fForRemove*/);
     }
 
+    void updateNodeHeight(Node* pNode) {
+        if (pNode == NULL) {
+            return;
+        }
+
+        unsigned int leftHeight = pNode->pLeft ? pNode->pLeft->height : 0;
+        unsigned int rightHeight = pNode->pRight ? pNode->pRight->height : 0;
+        pNode->height = max(leftHeight, rightHeight) + 1;
+    }
+
     Node* leftRotation(Node* pNode) {
+        // Perform the rotation
         Node* pRightChild = pNode->pRight;
         pNode->pRight = pRightChild->pLeft;
         pRightChild->pLeft = pNode;
+
+        // Update node heights
+        updateNodeHeight(pRightChild->pLeft);
+        updateNodeHeight(pRightChild->pRight);
+        updateNodeHeight(pRightChild);
+
+        // Return our new root
         return pRightChild;
     }
 
     Node* rightRotation(Node* pNode) {
+        // Perform the rotation
         Node* pLeftChild = pNode->pLeft;
         pNode->pLeft = pLeftChild->pRight;
         pLeftChild->pRight = pNode;
+
+        // Update node heights
+        updateNodeHeight(pLeftChild->pLeft);
+        updateNodeHeight(pLeftChild->pRight);
+        updateNodeHeight(pLeftChild);
+
+        // Return our new root
         return pLeftChild;
     }
 
@@ -168,6 +207,8 @@ private:
                     pNode = rightRotation(pNode);
                 }
             }
+
+            updateNodeHeight(pNode);
         }
     }
 
