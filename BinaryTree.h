@@ -49,38 +49,10 @@ public:
     }
 
     void remove(const DataType& data) {
-        // Handle the root case
-        if (mpRootNode && data == mpRootNode->data) {
-            if (!mpRootNode->pLeft && !mpRootNode->pRight) {
-                // The root node doesn't have any children. Just delete it.
-                delete mpRootNode;
-                mpRootNode = 0;
-            } else if (mpRootNode->pLeft && mpRootNode->pRight) {
-                // The root node has two children.
-                removeNodeWithTwoChildren(*mpRootNode);
-            } else {
-                // The root node has one child.
-
-                Node* pDelete = mpRootNode;
-
-                // Get our new root node.
-                if (mpRootNode->pLeft) {
-                    // The root node has only one child (the left node).
-                    mpRootNode = mpRootNode->pLeft;
-                } else {
-                    // The root node has only one child (the right node).
-                    mpRootNode = mpRootNode->pRight;
-                }
-
-                // Delete the old root node.
-                delete pDelete;
-            }
-        } else {
-            this->removeChild(data, mpRootNode);
-        }
+        this->remove(data, mpRootNode);
     }
 
-    void print(TraversalType traversalType = PRE_ORDER) {
+    void print(TraversalType traversalType = IN_ORDER) {
         if (mpRootNode) {
             bool fVisitedANode = false;
             this->traverse(traversalType, &BinaryTree::printTreeNode,
@@ -118,100 +90,76 @@ private:
         }
     }
 
-    // Check the children of pNode to see if they match data. If so, delete
-    // them. We operate at this level because there are instances where we need
-    // to update the parent of the deleted node, but nodes don't have back
-    // pointers to their parents.
-    void removeChild(const DataType& data, Node* pNode) {
-
+    void remove(const DataType& data, Node*& pNode) {
         if (!pNode) {
             return;
         }
 
-        if (pNode->pLeft && data == pNode->pLeft->data) {
-            // Our left child is the node to delete. Delete it.
-
-            Node* pDelete = pNode->pLeft;
-
-            if (!pDelete->pLeft && !pDelete->pRight) {
-                // It doesn't have any children. Delete the node and update
-                // our left pointer.
-                pNode->pLeft = NULL;
-                delete pDelete;
-            } else if (pDelete->pLeft && pDelete->pRight) {
-                // The node has two children.
-                removeNodeWithTwoChildren(*pDelete);
+        if (data == pNode->data) {
+            if (!pNode->pLeft && !pNode->pRight) {
+                removeNodeWithZeroChildren(pNode);
+            } else if (pNode->pLeft && pNode->pRight) {
+                removeNodeWithTwoChildren(pNode);
             } else {
-                // The node must only have one child.
-                removeNodeWithOneChild(pDelete, pNode,
-                    true /*fDeleteNodeLeftOfParent*/);
+                removeNodeWithOneChild(pNode);
             }
-        } else if (pNode->pRight && data == pNode->pRight->data) {
-            // Our right child is the node to delete. Delete it.
-
-            Node* pDelete = pNode->pRight;
-
-            if (!pDelete->pLeft && !pDelete->pRight) {
-                // It doesn't have any children. Delete the node and update
-                // our left pointer.
-                pNode->pRight = NULL;
-                delete pDelete;
-            } else if (pDelete->pLeft && pDelete->pRight) {
-                // The node has two children.
-                removeNodeWithTwoChildren(*pDelete);
-            } else {
-                // The node must only have one child.
-                removeNodeWithOneChild(pDelete, pNode,
-                    false /*fDeleteNodeLeftOfParent*/);
-            }
+        } else if (data < pNode->data) {
+            this->remove(data, pNode->pLeft);
         } else {
-            // It's neither of the children of this node. Continue down the tree
-            if (data < pNode->data) {
-                this->removeChild(data, pNode->pLeft);
-            } else {
-                this->removeChild(data, pNode->pRight);
-            }
+            this->remove(data, pNode->pRight);
         }
     }
 
-    void removeNodeWithOneChild(Node* pDelete, Node* pParent,
-        bool fDeleteNodeLeftOfParent) {
-
-        // Update the parent of the delete node to point at the single child
-        // of the deleted node.
-        if (fDeleteNodeLeftOfParent) {
-            if (pDelete->pLeft) {
-                pParent->pLeft = pDelete->pLeft;
-            } else {
-                pParent->pLeft = pDelete->pRight;
-            }
-        } else {
-            if (pDelete->pLeft) {
-                pParent->pRight = pDelete->pLeft;
-            } else {
-                pParent->pRight = pDelete->pRight;
-            }
-        }
-
-        // Delete the node
+    void removeNodeWithZeroChildren(Node*& pNode) {
+        Node* pDelete = pNode;
+        pNode = NULL;
         delete pDelete;
     }
 
-    void removeNodeWithTwoChildren(Node& pNode) {
-        Node* pParent = &pNode;
-        Node* pInOrderPredecessor = pNode.pLeft;
+    void removeNodeWithOneChild(Node*& pNode) {
+        Node* pDelete = pNode;
 
-        while (pInOrderPredecessor->pRight) {
-            pParent = pInOrderPredecessor;
-            pInOrderPredecessor = pInOrderPredecessor->pRight;
+        // Update the parent of the delete node to point at the single child
+        // of the deleted node.
+        if (pNode->pLeft) {
+            pNode = pNode->pLeft;
+        } else {
+            pNode = pNode->pRight;
+        }
+
+        delete pDelete;
+    }
+
+    void removeNodeWithTwoChildren(Node* pNode) {
+        // In this function, predecessor refers to the in-order predecessor of
+        // the node passed in.
+
+        Node* pPredecessorParent = pNode;
+        Node* pPredecessor = pNode->pLeft;
+
+        while (pPredecessor->pRight) {
+            pPredecessorParent = pPredecessor;
+            pPredecessor = pPredecessor->pRight;
         }
 
         // Copy the in-order predecessor's data into our node
-        pNode.data = pInOrderPredecessor->data;
+        pNode->data = pPredecessor->data;
 
-        // Delete the in-order predecessor (which we know has no children)
-        pParent->pRight = NULL;
-        delete pInOrderPredecessor;
+        // Delete the in-order predecessor (which we know has 0 or 1 child. If
+        // it had 2 children, one of them would be the predecessor)
+        if (!pPredecessor->pLeft && !pPredecessor->pRight) {
+            if (pPredecessorParent == pNode) {
+                removeNodeWithZeroChildren(pPredecessorParent->pLeft);
+            } else {
+                removeNodeWithZeroChildren(pPredecessorParent->pRight);
+            }
+        } else {
+            if (pPredecessorParent == pNode) {
+                removeNodeWithOneChild(pPredecessorParent->pLeft);
+            } else {
+                removeNodeWithOneChild(pPredecessorParent->pRight);
+            }
+        }
     }
 
     void traverse(TraversalType traversalType,
