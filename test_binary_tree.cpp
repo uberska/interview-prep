@@ -17,16 +17,13 @@ void printHeader() {
 int main(int argc, char** argv) {
     cout << endl << "Beginning BinaryTree Test." << endl;
 
+    //
+    // Test insertions and traversal
+    //
+    printHeader();
+
     IntTree tree;
 
-    // Print initial tree
-    printHeader();
-    cout << endl << "Initial Tree..." << endl;
-
-    tree.print();
-
-    // Test insertions
-    printHeader();
     cout << endl << "Testing Insertions And Traversal..." << endl;
 
     cout << endl << "Inserting 50";
@@ -62,7 +59,9 @@ int main(int argc, char** argv) {
     cout << endl << "Actual:   ";
     tree.print(IntTree::POST_ORDER);
 
+    //
     // Test deletions
+    //
     printHeader();
     cout << endl << "Testing Deletions (Traversals IN ORDER)..." << endl;
 
@@ -111,6 +110,36 @@ int main(int argc, char** argv) {
     tree.remove(3);
     tree.print(IntTree::IN_ORDER);
 
+    //
+    // Test deletion of node with two children
+    //
+    printHeader();
+
+    IntTree deleteTree;
+
+    cout << endl << "Testing Deletion Of Node With Two Children..." << endl;
+
+    cout << endl << "Inserting 30";
+    deleteTree.insert(30);
+    cout << endl << "Inserting 5";
+    deleteTree.insert(5);
+    cout << endl << "Inserting 10";
+    deleteTree.insert(10);
+    cout << endl << "Inserting 0";
+    deleteTree.insert(0);
+    cout << endl;
+
+    cout << endl << "Initial Tree..." << endl;
+    deleteTree.print();
+
+    cout << endl << "Expected: 0, 10, 30";
+    cout << endl << "Actual:   ";
+    deleteTree.remove(5);
+    deleteTree.print();
+
+    //
+    // Done.
+    //
     printHeader();
     cout << endl << "Done With BinaryTree Test." << endl;
 }
