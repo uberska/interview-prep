@@ -97,8 +97,8 @@ private:
             return true;
         }
 
-        int balanceFactor = this->balanceFactor(pNode);
-        if (balanceFactor < -1 || balanceFactor > 1) {
+        int nodeBalanceFactor = balanceFactor(pNode);
+        if (nodeBalanceFactor < -1 || nodeBalanceFactor > 1) {
             return false;
         }
 
@@ -124,25 +124,7 @@ private:
             }
         }
 
-        int balanceFactor = this->balanceFactor(pNode);
-        assert(balanceFactor >= -2 || balanceFactor <= 2);
-        if (balanceFactor == -2) {
-            int rightBalanceFactor = this->balanceFactor(pNode->pRight);
-            if (rightBalanceFactor == -1) {
-                pNode = leftRotation(pNode);
-            } else if (rightBalanceFactor == 1) {
-                pNode->pRight = rightRotation(pNode->pRight);
-                pNode = leftRotation(pNode);
-            }
-        } else if (balanceFactor == 2) {
-            int leftBalanceFactor = this->balanceFactor(pNode->pLeft);
-            if (leftBalanceFactor == 1) {
-                pNode = rightRotation(pNode);
-            } else if (leftBalanceFactor == -1) {
-                pNode->pLeft = leftRotation(pNode->pLeft);
-                pNode = rightRotation(pNode);
-            }
-        }
+        rebalanceNode(pNode, false /*fForRemove*/);
     }
 
     Node* leftRotation(Node* pNode) {
@@ -157,6 +139,36 @@ private:
         pNode->pLeft = pLeftChild->pRight;
         pLeftChild->pRight = pNode;
         return pLeftChild;
+    }
+
+    void rebalanceNode(Node*& pNode, bool fForRemove) {
+        if (pNode) {
+            int nodeBalanceFactor = balanceFactor(pNode);
+
+            assert(nodeBalanceFactor >= -2 || nodeBalanceFactor <= 2);
+
+            if (nodeBalanceFactor == -2) {
+                int rightBalanceFactor = balanceFactor(pNode->pRight);
+
+                if (rightBalanceFactor == -1 ||
+                    (fForRemove && rightBalanceFactor == 0)) {
+                    pNode = leftRotation(pNode);
+                } else if (rightBalanceFactor == 1) {
+                    pNode->pRight = rightRotation(pNode->pRight);
+                    pNode = leftRotation(pNode);
+                }
+            } else if (nodeBalanceFactor == 2) {
+                int leftBalanceFactor = balanceFactor(pNode->pLeft);
+
+                if (leftBalanceFactor == 1 ||
+                    (fForRemove && leftBalanceFactor == 0)) {
+                    pNode = rightRotation(pNode);
+                } else if (leftBalanceFactor == -1) {
+                    pNode->pLeft = leftRotation(pNode->pLeft);
+                    pNode = rightRotation(pNode);
+                }
+            }
+        }
     }
 
     void remove(const DataType& data, Node*& pNode) {
@@ -177,6 +189,8 @@ private:
         } else {
             this->remove(data, pNode->pRight);
         }
+
+        rebalanceNode(pNode, true /*fForRemove*/);
     }
 
     void removeNodeWithZeroChildren(Node*& pNode) {
@@ -197,6 +211,18 @@ private:
         }
 
         delete pDelete;
+    }
+
+    void rebalancePredecessorParentsForRemove(Node*& pNode) {
+        if (!pNode) {
+            return;
+        }
+
+        if (pNode->pRight != NULL) {
+            rebalancePredecessorParentsForRemove(pNode->pRight);
+        }
+
+        rebalanceNode(pNode, true /*fForRemove*/);
     }
 
     void removeNodeWithTwoChildren(Node* pNode) {
@@ -228,6 +254,13 @@ private:
             } else {
                 removeNodeWithOneChild(pPredecessorParent->pRight);
             }
+        }
+
+        // Now that we've removed the node, we need to rebalance from the
+        // parent of the node we removed to the current node's left child.
+        // The caller calling us with take care of balancing from us upward.
+        if (pNode && pNode->pLeft) {
+            rebalancePredecessorParentsForRemove(pNode->pLeft);
         }
     }
 
