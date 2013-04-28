@@ -141,6 +141,39 @@ string addSpacesToStr(const set<string>& words, const string& withoutSpaces) {
 }
 
 
+int fibonacciIterative(int iteration) {
+    if (iteration == 0) {
+        return 0;
+    } else if (iteration == 1) {
+        return 1;
+    }
+
+    int prevPrev = 0;
+    int prev = 1;
+    int result = 0;
+
+    for (int index = 2; index <= iteration; index++) {
+        result = prevPrev + prev;
+        prevPrev = prev;
+        prev = result;
+    }
+
+    return result;
+}
+
+
+int fibonacciRecursive(int iteration) {
+    if (iteration == 0) {
+        return 0;
+    } else if (iteration == 1) {
+        return 1;
+    }
+
+    return fibonacciRecursive(iteration - 1) +
+        fibonacciRecursive(iteration - 2);
+}
+
+
 int main(int argc, char** argv) {
     //
     // Let the user know we're starting.
@@ -268,6 +301,34 @@ int main(int argc, char** argv) {
     cout << "Words Without Spaces: " << withoutSpacesStr << endl;
     string withSpacesStr = addSpacesToStr(wordSet, withoutSpacesStr);
     cout << "Words With Spaces   : " << withSpacesStr << endl;
+
+    //
+    // Fibonacci
+    //
+    printHeader();
+
+    int iterations = 15;
+
+    cout << endl << "First " << iterations <<
+        " Numbers Of Fibonacci Sequence" << endl;
+
+    cout << endl << "Iterative: " << endl;
+    for (int iteration = 0; iteration < iterations; iteration++) {
+        if (iteration != 0) {
+            cout << ", ";
+        }
+        cout << fibonacciIterative(iteration);
+    }
+    cout << endl;
+
+    cout << endl << "Recursive: " << endl;
+    for (int iteration = 0; iteration < iterations; iteration++) {
+        if (iteration != 0) {
+            cout << ", ";
+        }
+        cout << fibonacciRecursive(iteration);
+    }
+    cout << endl;
 
     //
     // Let the user know we're done.
