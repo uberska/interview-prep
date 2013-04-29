@@ -66,6 +66,10 @@ public:
         cout << endl;
     }
 
+    const Node* const find(const DataType& data) const {
+        return this->find(data, mpRootNode);
+    }
+
     const Node* const getRoot() const { return mpRootNode; }
 
     int computeHeight(const Node* const pNode) const {
@@ -86,6 +90,22 @@ private:
 
     typedef void (AVLTree::*ProcessTreeNodeCallback)(
         Node* pNode, const bool&, bool&);
+
+    const Node* const find(const DataType& data,
+        const Node* const pNode) const {
+
+        if (pNode == NULL) {
+            return NULL;
+        }
+
+        if (data == pNode->data) {
+            return pNode;
+        } else if (data < pNode->data) {
+            return this->find(data, pNode->pLeft);
+        } else {
+            return this->find(data, pNode->pRight);
+        }
+    }
 
     int balanceFactor(const Node* const pNode) const {
         if (pNode == NULL) {
@@ -355,7 +375,7 @@ private:
         }
     }
 
-    void printTreeNode(Node* pNode, const bool& fRootOfTree,
+    void printTreeNode(Node* pNode, const bool& /*fRootOfTree*/,
         bool& fVisitedANode) {
 
         if (pNode) {

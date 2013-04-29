@@ -64,6 +64,10 @@ public:
         cout << endl;
     }
 
+    const Node* const find(const DataType& data) const {
+        return this->find(data, mpRootNode);
+    }
+
     const Node* const getRoot() const { return mpRootNode; }
 
 private:
@@ -71,6 +75,22 @@ private:
 
     typedef void (BinaryTree::*ProcessTreeNodeCallback)(
         Node* pNode, const bool&, bool&);
+
+    const Node* const find(const DataType& data,
+        const Node* const pNode) const {
+
+        if (pNode == NULL) {
+            return NULL;
+        }
+
+        if (data == pNode->data) {
+            return pNode;
+        } else if (data < pNode->data) {
+            return this->find(data, pNode->pLeft);
+        } else {
+            return this->find(data, pNode->pRight);
+        }
+    }
 
     void insert(const DataType& data, Node& node) {
         if (data == node.data) {
@@ -83,7 +103,9 @@ private:
             }
         } else {
             if (node.pRight == 0) {
+                cout << endl << data;
                 node.pRight = new Node(data);
+                cout << endl << "done creating new node" << endl;
             } else {
                 this->insert(data, *node.pRight);
             }
@@ -212,7 +234,7 @@ private:
         }
     }
 
-    void printTreeNode(Node* pNode, const bool& fRootOfTree,
+    void printTreeNode(Node* pNode, const bool& /*fRootOfTree*/,
         bool& fVisitedANode) {
 
         if (pNode) {
