@@ -14,7 +14,16 @@ void printHeader() {
 }
 
 
-int main(int argc, char** argv) {
+const char* printFound(bool fFound) {
+    if (fFound) {
+        return "FOUND";
+    } else {
+        return "NOT FOUND";
+    }
+}
+
+
+int main(int /*argc*/, char** /*argv*/) {
     cout << endl << "Beginning BinaryTree Test." << endl;
 
     //
@@ -58,6 +67,42 @@ int main(int argc, char** argv) {
     cout << endl << "Expected: 0, 10, 40, 30, 100, 80, 50";
     cout << endl << "Actual:   ";
     tree.print(IntTree::POST_ORDER);
+
+    //
+    // Testing finds
+    //
+    printHeader();
+    cout << endl << "Testing Searches...";
+
+    int shouldFind[] = { 50, 30, 80, 40, 10, 100, 0 };
+    int shouldFindSize = sizeof(shouldFind) / sizeof(shouldFind[0]);
+    int shouldNotFind[] = { 51, 3, 87 };
+    int shouldNotFindSize = sizeof(shouldNotFind) / sizeof(shouldNotFind[0]);
+
+    for (int index = 0; index < shouldFindSize; index++) {
+        const IntNode* const pNode = tree.find(shouldFind[index]);
+        bool fFound = pNode != NULL;
+        if (pNode) {
+            assert(pNode->data == shouldFind[index]);
+        }
+
+        cout << endl;
+        cout << endl << shouldFind[index];
+        cout << endl << "Expected: FOUND";
+        cout << endl << "Actual:   " << printFound(fFound);
+    }
+
+    for (int index = 0; index < shouldNotFindSize; index++) {
+        const IntNode* const pNode = tree.find(shouldNotFind[index]);
+        bool fFound = pNode != NULL;
+
+        cout << endl;
+        cout << endl << shouldNotFind[index];
+        cout << endl << "Expected: NOT FOUND";
+        cout << endl << "Actual:   " << printFound(fFound);
+    }
+
+    cout << endl;
 
     //
     // Test deletions
