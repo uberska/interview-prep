@@ -103,9 +103,7 @@ private:
             }
         } else {
             if (node.pRight == 0) {
-                cout << endl << data;
                 node.pRight = new Node(data);
-                cout << endl << "done creating new node" << endl;
             } else {
                 this->insert(data, *node.pRight);
             }
