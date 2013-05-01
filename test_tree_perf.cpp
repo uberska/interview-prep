@@ -151,20 +151,20 @@ int main(int /*argc*/, char** /*argv*/) {
 
     compareTrees(1000, false /*fRandom*/);
     compareTrees(10000, false /*fRandom*/);
-    compareTrees(100000, false /*fRandom*/);
-    compareTrees(1000000, false /*fRandom*/);
-    compareTrees(10000000, false /*fRandom*/);
-    compareTrees(100000000, false /*fRandom*/);
+    //compareTrees(100000, false /*fRandom*/);
+    //compareTrees(1000000, false /*fRandom*/);
+    //compareTrees(10000000, false /*fRandom*/);
+    //compareTrees(100000000, false /*fRandom*/);
 
     printHeader();
     cout << endl << "RANDOMLY GENERATED NUMBERS" << endl;
 
     compareTrees(1000, true /*fRandom*/);
     compareTrees(10000, true /*fRandom*/);
-    compareTrees(100000, true /*fRandom*/);
-    compareTrees(1000000, true /*fRandom*/);
-    compareTrees(10000000, true /*fRandom*/);
-    compareTrees(100000000, true /*fRandom*/);
+    //compareTrees(100000, true /*fRandom*/);
+    //compareTrees(1000000, true /*fRandom*/);
+    //compareTrees(10000000, true /*fRandom*/);
+    //compareTrees(100000000, true /*fRandom*/);
 
     printHeader();
     cout << endl << "Done With Tree Perf Test." << endl;
