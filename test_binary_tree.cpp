@@ -68,6 +68,11 @@ int main(int /*argc*/, char** /*argv*/) {
     cout << endl << "Actual:   ";
     tree.print(IntTree::POST_ORDER);
 
+    cout << endl << "BREADTH FIRST:";
+    cout << endl << "Expected: 50, 30, 80, 10, 40, 100, 0";
+    cout << endl << "Actual:   ";
+    tree.print(IntTree::BREADTH_FIRST);
+
     //
     // Testing finds
     //

@@ -1,6 +1,7 @@
 #pragma once
 
 #include <iostream>
+#include "Queue.h"
 
 
 using namespace std;
@@ -31,13 +32,14 @@ public:
     ~BinaryTree() {
         bool fVisitedANode = false;
         this->traverse(POST_ORDER, &BinaryTree::deleteTreeNode, mpRootNode,
-            true /*fRootOfTree*/, fVisitedANode);
+            fVisitedANode);
     }
 
     enum TraversalType {
         PRE_ORDER,
         IN_ORDER,
-        POST_ORDER
+        POST_ORDER,
+        BREADTH_FIRST
     };
 
     void insert(const DataType& data) {
@@ -56,7 +58,7 @@ public:
         if (mpRootNode) {
             bool fVisitedANode = false;
             this->traverse(traversalType, &BinaryTree::printTreeNode,
-                mpRootNode, true /*fRootOfTree*/, fVisitedANode);
+                mpRootNode, fVisitedANode);
         } else {
             cout << "NULL Root";
         }
@@ -73,8 +75,7 @@ public:
 private:
     Node* mpRootNode;
 
-    typedef void (BinaryTree::*ProcessTreeNodeCallback)(
-        Node* pNode, const bool&, bool&);
+    typedef void (BinaryTree::*ProcessTreeNodeCallback)(Node* pNode, bool&);
 
     const Node* const find(const DataType& data,
         const Node* const pNode) const {
@@ -185,55 +186,68 @@ private:
     void traverse(TraversalType traversalType,
         ProcessTreeNodeCallback processTreeNode,
         Node* pRootNode,
-        const bool& fRootOfTree,
         bool& fVisitedANode) {
 
         if (pRootNode) {
             if (traversalType == PRE_ORDER) {
                 // Root
-                (this->*processTreeNode)(pRootNode, fRootOfTree, fVisitedANode);
+                (this->*processTreeNode)(pRootNode, fVisitedANode);
 
                 // Left
                 this->traverse(traversalType, processTreeNode,
-                    pRootNode->pLeft, false /*fRootOfTree*/,
-                    fVisitedANode);
+                    pRootNode->pLeft, fVisitedANode);
 
                 // Right
                 this->traverse(traversalType, processTreeNode,
-                    pRootNode->pRight, false /*fRootOfTree*/,
-                    fVisitedANode);
+                    pRootNode->pRight, fVisitedANode);
             } else if (traversalType == IN_ORDER) {
                 // Left
                 this->traverse(traversalType, processTreeNode,
-                    pRootNode->pLeft, false /*fRootOfTree*/,
-                    fVisitedANode);
+                    pRootNode->pLeft, fVisitedANode);
 
                 // Root
-                (this->*processTreeNode)(pRootNode, fRootOfTree, fVisitedANode);
+                (this->*processTreeNode)(pRootNode, fVisitedANode);
 
                 // Right
                 this->traverse(traversalType, processTreeNode,
-                    pRootNode->pRight, false /*fRootOfTree*/,
-                    fVisitedANode);
+                    pRootNode->pRight, fVisitedANode);
             } else if (traversalType == POST_ORDER) {
                 // Left
                 this->traverse(traversalType, processTreeNode,
-                    pRootNode->pLeft, false /*fRootOfTree*/,
-                    fVisitedANode);
+                    pRootNode->pLeft, fVisitedANode);
 
                 // right
                 this->traverse(traversalType, processTreeNode,
-                    pRootNode->pRight, false /*fRootOfTree*/,
-                    fVisitedANode);
+                    pRootNode->pRight, fVisitedANode);
 
                 // Root
-                (this->*processTreeNode)(pRootNode, fRootOfTree, fVisitedANode);
+                (this->*processTreeNode)(pRootNode, fVisitedANode);
+            } else if (traversalType == BREADTH_FIRST) {
+                bool fVisitedANode = false;
+
+                Queue<Node*> queue;
+
+                queue.enqueue(pRootNode);
+
+                while (!queue.isEmpty()) {
+                    Node* pNode = queue.front();
+                    queue.dequeue();
+
+                    (this->*processTreeNode)(pNode, fVisitedANode);
+
+                    if (pNode->pLeft) {
+                        queue.enqueue(pNode->pLeft);
+                    }
+
+                    if (pNode->pRight) {
+                        queue.enqueue(pNode->pRight);
+                    }
+                }
             }
         }
     }
 
-    void printTreeNode(Node* pNode, const bool& /*fRootOfTree*/,
-        bool& fVisitedANode) {
+    void printTreeNode(Node* pNode, bool& fVisitedANode) {
 
         if (pNode) {
             if (fVisitedANode) {
@@ -245,10 +259,7 @@ private:
         }
     }
 
-    void deleteTreeNode(Node* pNode,
-        const bool& /*fRootOfTree*/,
-        bool& /*fVisitedNode*/) {
-
+    void deleteTreeNode(Node* pNode, bool& /*fVisitedNode*/) {
         delete pNode;
     }
 };

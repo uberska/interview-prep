@@ -11,7 +11,8 @@ template <class DataType>
 class LinkedList {
 public:
     LinkedList() :
-        mpFirstNode(0) {}
+        mpFirstNode(0),
+        mpLastNode(0) {}
 
     ~LinkedList() {
         LinkedListNode<DataType>* deleteNode = mpFirstNode;
@@ -25,6 +26,8 @@ public:
     const LinkedListNode<DataType>* const firstNode() const
         { return mpFirstNode; }
 
+    LinkedListNode<DataType>* firstNode() { return mpFirstNode; }
+
     LinkedListNode<DataType>* insertAfter(LinkedListNode<DataType>* pAfterNode,
         const DataType& data) {
 
@@ -33,6 +36,10 @@ public:
             // begninning of the list"
             LinkedListNode<DataType>* pInsertNode =
                 new LinkedListNode<DataType>(data, mpFirstNode);
+
+            if (mpFirstNode == 0) {
+                mpLastNode = pInsertNode;
+            }
 
             mpFirstNode = pInsertNode;
 
@@ -43,8 +50,16 @@ public:
 
             pAfterNode->setNext(pInsertNode);
 
+            if (pInsertNode->next() == 0) {
+                mpLastNode = pInsertNode;
+            }
+
             return pInsertNode;
         }
+    }
+
+    LinkedListNode<DataType>* insertEnd(const DataType& data) {
+        return this->insertAfter(mpLastNode, data);
     }
 
     LinkedListNode<DataType>* insertBeginning(const DataType& data) {
@@ -58,11 +73,18 @@ public:
                 LinkedListNode<DataType>* pDeleteNode = mpFirstNode;
                 mpFirstNode = mpFirstNode->next();
                 delete pDeleteNode;
+
+                if (mpFirstNode == 0) {
+                    mpLastNode = 0;
+                }
             }
         } else {
             LinkedListNode<DataType>* pNextNode = pAfterNode->next();
 
             if (pNextNode != 0) {
+                if (pNextNode->next() == 0) {
+                    mpLastNode = pAfterNode;
+                }
                 pAfterNode->setNext(pNextNode->next());
                 delete pNextNode;
             }
@@ -91,4 +113,5 @@ public:
 
 private:
     LinkedListNode<DataType>* mpFirstNode;
+    LinkedListNode<DataType>* mpLastNode;
 };
