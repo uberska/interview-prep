@@ -24,7 +24,7 @@ void printFound(bool found) {
 }
 
 
-int main(int argc, char** argv) {
+int main(int /*argc*/, char** /*argv*/) {
     cout << endl << "Beginning STL Coding." << endl;
 
     string aString("A");

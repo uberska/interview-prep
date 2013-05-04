@@ -48,7 +48,7 @@ public:
     }
 
     LinkedListNode<DataType>* insertBeginning(const DataType& data) {
-        this->insertAfter(0, data);
+        return this->insertAfter(0, data);
     }
 
     void removeAfter(LinkedListNode<DataType>* pAfterNode) {

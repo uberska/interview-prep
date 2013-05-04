@@ -126,7 +126,10 @@ void myStrCpy(char* destString, const char* srcString) {
 
 
 string addSpacesToStr(const set<string>& words, const string& withoutSpaces) {
-    for (int charIndex = 0; charIndex <= withoutSpaces.length(); charIndex++) {
+    for (unsigned int charIndex = 0;
+        charIndex <= withoutSpaces.length();
+        charIndex++) {
+
         string wordOne = withoutSpaces.substr(0, charIndex);
         string wordTwo = withoutSpaces.substr(charIndex,
             withoutSpaces.length() - charIndex);
@@ -174,7 +177,7 @@ int fibonacciRecursive(int iteration) {
 }
 
 
-int main(int argc, char** argv) {
+int main(int /*argc*/, char** /*argv*/) {
     //
     // Let the user know we're starting.
     //
@@ -241,16 +244,18 @@ int main(int argc, char** argv) {
     cout << endl;
     char* srcString1 = "This is a test string.";
     cout << "Source String: " << srcString1 << endl;
-    char destString1[myStrLen(srcString1) + 1];
+    char* destString1 = new char[myStrLen(srcString1) + 1];
     myStrCpy(destString1, srcString1);
     cout << "Copied String: " << destString1 << endl;
+    delete [] destString1;
 
     cout << endl;
     char* srcString2 = "";
     cout << "Source String: <Empty String>" << endl;
-    char destString2[myStrLen(srcString2) + 1];
+    char* destString2 = new char[myStrLen(srcString2) + 1];
     myStrCpy(destString2, srcString2);
     cout << "Copied String: " << destString2 << endl;
+    delete [] destString2;
 
     //
     // Merge two sorted int arrays into one sorted int array
@@ -259,13 +264,13 @@ int main(int argc, char** argv) {
     cout << endl << "Merge Sorted Int Arrays" << endl;
 
     int intArray1[] = {1, 3, 6, 8, 10};
-    int array1Count = sizeof(intArray1) / sizeof(intArray1[0]);
+    const int array1Count = sizeof(intArray1) / sizeof(intArray1[0]);
     cout << "Array1  : ";
     printArray(intArray1, array1Count);
     cout << endl;
 
     int intArray2[] = {2, 3, 5, 9, 9};
-    int array2Count = sizeof(intArray2) / sizeof(intArray2[0]);
+    const int array2Count = sizeof(intArray2) / sizeof(intArray2[0]);
     cout << "Array2  : ";
     printArray(intArray2, array2Count);
     cout << endl;

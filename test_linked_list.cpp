@@ -14,7 +14,7 @@ void printHeader() {
 }
 
 
-int main(int argc, char** argv) {
+int main(int /*argc*/, char** /*argv*/) {
     cout << endl << "Beginning LinkedList Test." << endl;
 
     IntList linkedList;
@@ -31,7 +31,7 @@ int main(int argc, char** argv) {
 
     cout << endl << "Expected: 3";
     cout << endl << "Actual:   ";
-    IntNode* threeIntNode = linkedList.insertBeginning(3);
+    linkedList.insertBeginning(3);
     linkedList.print();
 
     cout << endl << "Expected: 0 -> 3";
@@ -46,7 +46,7 @@ int main(int argc, char** argv) {
 
     cout << endl << "Expected: 0 -> 1 -> 2 -> 3";
     cout << endl << "Actual:   ";
-    IntNode* twoIntNode = linkedList.insertAfter(oneIntNode, 2);
+    linkedList.insertAfter(oneIntNode, 2);
     linkedList.print();
 
     // Test deletions
@@ -80,5 +80,7 @@ int main(int argc, char** argv) {
 
     printHeader();
     cout << endl << "Done With LinkedList Test." << endl;
+
+    return EXIT_SUCCESS;
 }
 

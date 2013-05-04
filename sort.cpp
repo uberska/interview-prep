@@ -155,12 +155,12 @@ void mergeSort(int* array, int size) {
 }
 
 
-int main(int argc, char** argv) {
+int main(int /*argc*/, char** /*argv*/) {
     cout << endl << "Beginning Sort Coding." << endl;
 
     srand(time(NULL));
 
-    int arraySize = 20;
+    const int arraySize = 20;
     int array[arraySize];
 
     //
