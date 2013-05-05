@@ -46,6 +46,59 @@ void printArray(const int* const array, int size) {
 }
 
 
+void siftDown(int*array, int startIndex, int endIndex) {
+    int rootIndex = startIndex;
+
+    while (rootIndex * 2 + 1 <= endIndex) {
+        int childIndex = 2 * rootIndex + 1;
+        int swapIndex = rootIndex;
+        if (array[swapIndex] < array[childIndex]) {
+            swapIndex = childIndex;
+        }
+        if (childIndex + 1 <= endIndex &&
+            array[swapIndex] < array[childIndex + 1]) {
+            swapIndex = childIndex + 1;
+        }
+        if (swapIndex != rootIndex) {
+            int temp = array[rootIndex];
+            array[rootIndex] = array[swapIndex];
+            array[swapIndex] = temp;
+
+            rootIndex = swapIndex;
+        } else {
+            return;
+        }
+    }
+}
+
+
+void heapify(int* array, int size) {
+    int startIndex = (size - 1) / 2;
+
+    while (startIndex >= 0) {
+        siftDown(array, startIndex, size - 1);
+        startIndex--;
+    }
+}
+
+
+void heapSort(int* array, int size) {
+    heapify(array, size);
+
+    int endIndex = size - 1;
+
+    while (endIndex > 0) {
+        int temp = array[0];
+        array[0] = array[endIndex];
+        array[endIndex] = temp;
+
+        endIndex--;
+
+        siftDown(array, 0, endIndex);
+    }
+}
+
+
 void bubbleSort(int* array, int size) {
     bool didSwap = true;
     while (didSwap == true) {
@@ -215,6 +268,25 @@ int main(int /*argc*/, char** /*argv*/) {
     cout << endl;
 
     mergeSort(array, arraySize);
+
+    cout << endl << "Sorted Contents:" << endl;
+    printArray(array, arraySize);
+    cout << endl;
+
+    //
+    // Heap Sort
+    //
+    printHeader();
+
+    cout << endl << "Heap Sort" << endl;
+
+    populateArray(array, arraySize);
+
+    cout << endl << "Initial Array Contents:" << endl;
+    printArray(array, arraySize);
+    cout << endl;
+
+    heapSort(array, arraySize);
 
     cout << endl << "Sorted Contents:" << endl;
     printArray(array, arraySize);
